@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>React!</title>
+        <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+        <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+        <style src="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"></style>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <style>
+         #container {
+             padding-left: 40px;
+             padding-right: 40px;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+    </body>
+    <script type="text/babel">
+     var Square = React.createClass({
+         render() {
+           var squareStyle = {
+             height: 150,
+             backgroundColor: this.props.color,
+           };
+           return <div style={squareStyle}></div>
+         }
+     })
+     var Label = React.createClass({
+         render() {
+           var labelStyle = {
+             fontFamily: "sans-serif",
+             fontWeight: "bold",
+             padding: 13,
+             margin: 0
+           };
+           return <div style={labelStyle}>{this.props.color}</div>
+         }
+     })
+     var Card = React.createClass({
+         render() {
+             var cardStyle = {
+                 "display": "inline-block",
+                 "height": 200,
+                 "width": 150,
+                 "padding": 0,
+                 margin: 20,
+                 "backgroundColor": "#fff",
+                 "WebkitFilter": "drop-shadow(0px 0px 5px #666)",
+                 "Filter": "drop-shadow(0px 0px 5px #666)"
+             };
+             return <div style={cardStyle}>
+               <Square color={this.props.color}/>
+               <Label color={this.props.color}/></div>
+         }
+     })
+
+     var CardContainer = React.createClass({
+         render() {
+            var cards = this.props.colors.map((color) => <Card color={color}/>);
+            return <div>{cards}</div>
+         }
+     });
+
+     var Page = React.createClass({
+         getInitialState() {
+             return { colors: [] };
+         },
+         componentDidMount() {
+             this.reload()
+         },
+         reload() {
+            fetch("http://localhost:8080/api/v1/colors").then(response => {
+                if (response.status === 200) {
+                    response.json().then(data => {
+                        this.setState({colors: data});
+                    });
+                }
+            });
+         },
+         render() {
+             return (
+                 <div>
+                    <h1>Random colors!</h1>
+                    <CardContainer colors={this.state.colors}/>
+                 </div>
+             )
+         }
+     });
+
+     ReactDOM.render(<Page/>, document.querySelector("#container"));
+   </script>
+</html>
