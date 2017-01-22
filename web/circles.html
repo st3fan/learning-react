@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>React!</title>
+        <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+        <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+        <style src="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"></style>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <style>
+         #container {
+             padding: 50px;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+    </body>
+    <script type="text/babel">
+        var Circle = React.createClass({
+            render() {
+                var circleStyle = {
+                    padding: 10,
+                    margin: 20,
+                    display: "inline-block",
+                    backgroundColor: this.props.backgroundColor,
+                    borderRadius: "50%",
+                    width: 50,
+                    height: 50
+                };
+                return <div style={circleStyle}></div>
+            }
+        });
+
+        function toHex(n) {
+            let s = n.toString(16);
+            if (s.length == 1) {
+                s = "0" + s
+            }
+            return s;
+        }
+
+        function randomColor() {
+            return "#" + toHex(Math.floor(Math.random() * 255)) + toHex(Math.floor(Math.random() * 255)) + toHex(Math.floor(Math.random() * 255));
+        }
+
+        function createRandomCircle(key) {
+            return <Circle key={key} backgroundColor={randomColor()}/>;
+        }
+
+        var circles = [];
+        for (var i = 0; i < 250; i++) {
+            circles.push(createRandomCircle(i));
+        }
+
+        ReactDOM.render(<div>{circles}</div>, document.querySelector("#container"));
+    </script>
+</html>
